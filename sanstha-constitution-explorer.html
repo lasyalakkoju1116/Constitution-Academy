@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sansthā — Meet the Framers, See the Articles Work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#161a22; --navy:#1c2b4a; --navy-deep:#111b31;
+  --parchment:#f6f1e4; --parchment-dim:#ece4d0;
+  --gold:#b8862f; --gold-bright:#d9a441; --maroon:#8a3a3a; --green:#2f6b52;
+  --line:#d8cdae; --white:#fffdf8;
+  --saffron:#FF9933; --flag-white:#ffffff; --india-green:#138808; --chakra-navy:#0b3d8c;
+  --glow-saffron:rgba(255,153,51,.55); --glow-green:rgba(19,136,8,.5);
+  --font-display:'Fraunces',serif; --font-body:'Inter',sans-serif; --font-mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0; font-family:var(--font-body); background:var(--parchment); color:var(--ink); -webkit-font-smoothing:antialiased;}
+button{font-family:inherit; cursor:pointer;}
+::selection{background:var(--gold); color:var(--white);}
+
+.topbar{position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:space-between; padding:14px 28px; background:rgba(246,241,228,.9); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+.brand{display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-weight:600; font-size:20px;}
+.brand .seal{width:30px; height:30px; border-radius:50%; background:conic-gradient(from 180deg,var(--navy),var(--gold),var(--navy)); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:11px; color:#fff; font-weight:700;}
+.topbar-stats{display:flex; gap:14px; align-items:center; font-family:var(--font-mono); font-size:13px; color:var(--navy);}
+.stat-pill{display:flex; align-items:center; gap:6px; background:var(--white); border:1px solid var(--line); padding:6px 12px; border-radius:999px;}
+.stat-pill b{color:var(--gold); font-size:14px;}
+
+/* ---- hero / picker ---- */
+.hero{max-width:980px; margin:0 auto; padding:72px 24px 40px; text-align:center;}
+.eyebrow{font-family:var(--font-mono); letter-spacing:.12em; text-transform:uppercase; font-size:12px; color:var(--gold); font-weight:700;}
+.hero h1{font-family:var(--font-display); font-size:clamp(32px,5vw,50px); font-weight:600; line-height:1.1; margin:14px 0 16px;}
+.hero p{font-size:16.5px; color:#4a4739; line-height:1.6; max-width:56ch; margin:0 auto;}
+
+/* ---- guide / character select (narrator roster) ---- */
+.roster-section{background:var(--navy-deep); padding:60px 28px 68px; color:var(--white); position:relative; overflow:hidden; margin-top:10px;}
+.roster-section::before{
+  content:""; position:absolute; inset:0; pointer-events:none; opacity:.5;
+  background-image:repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0px, rgba(255,255,255,.035) 1px, transparent 1px, transparent 3px);
+}
+.roster-inner{max-width:1080px; margin:0 auto; position:relative;}
+.roster-head{max-width:640px; margin-bottom:32px;}
+.roster-head .eyebrow{color:var(--gold-bright);}
+.roster-head h2{font-family:var(--font-display); font-size:clamp(24px,3.2vw,32px); font-weight:600; margin:10px 0 10px; color:var(--white);}
+.roster-head p{color:#aab3c9; font-size:15px; line-height:1.6;}
+.roster-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:18px;}
+.char-card{
+  background:#16233f; border:1px solid #2a3a5c; border-radius:14px;
+  padding:0; text-align:left; color:var(--white); cursor:pointer;
+  display:flex; flex-direction:column; overflow:hidden;
+  position:relative; transition:border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.char-card:hover, .char-card:focus-visible{
+  border-color:var(--saffron); transform:translateY(-4px);
+  box-shadow:0 14px 30px -14px var(--glow-saffron), 0 0 0 1px var(--glow-green) inset;
+}
+.char-card:focus-visible{outline:3px solid var(--saffron);}
+.char-portrait{
+  aspect-ratio:1/1; position:relative;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(160deg, var(--saffron) 0%, var(--flag-white) 50%, var(--india-green) 100%);
+}
+.char-portrait::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(11,15,26,0) 40%, rgba(11,15,26,.88) 100%);
+}
+.char-portrait svg{position:relative; z-index:1; width:58%; height:58%;}
+.char-class{
+  position:absolute; top:8px; left:8px; z-index:2;
+  font-family:var(--font-mono); font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  background:rgba(11,15,26,.65); color:var(--gold-bright); padding:3px 8px; border-radius:999px;
+  border:1px solid rgba(217,164,65,.5);
+}
+.char-body{padding:14px 14px 16px;}
+.char-body h3{font-family:var(--font-display); font-size:16.5px; font-weight:600; margin:0 0 3px;}
+.char-role{font-family:var(--font-mono); font-size:10.5px; color:#8b96b4; text-transform:uppercase; letter-spacing:.04em; margin-bottom:10px; display:block; line-height:1.4;}
+.char-link{
+  font-family:var(--font-mono); font-size:11px; font-weight:700; color:var(--gold-bright);
+  display:flex; align-items:center; gap:5px; text-transform:uppercase; letter-spacing:.04em;
+}
+.char-link .arrow{transition:transform .2s ease;}
+.char-card:hover .char-link .arrow{transform:translateX(3px);}
+
+/* ---- narrator strip shown inside a deep-dive article ---- */
+.narrator-strip{display:flex; align-items:center; gap:14px; background:var(--white); border:1px solid var(--line); border-radius:12px; padding:14px 18px; margin-bottom:28px;}
+.narrator-portrait{width:46px; height:46px; border-radius:50%; flex-shrink:0; background:linear-gradient(160deg, var(--saffron) 0%, var(--flag-white) 50%, var(--india-green) 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 2px var(--white), 0 0 0 3px var(--line);}
+.narrator-portrait svg{width:60%; height:60%;}
+.narrator-text{line-height:1.4;}
+.narrator-text b{font-family:var(--font-display); font-size:15px; font-weight:600; display:block;}
+.narrator-text span{font-family:var(--font-mono); font-size:11px; color:#726f5f; text-transform:uppercase; letter-spacing:.03em;}
+.art-guide-tag{font-family:var(--font-mono); font-size:10.5px; color:#8a8570; display:flex; align-items:center; gap:5px; margin-top:-2px;}
+
+.picker{max-width:1080px; margin:36px auto 90px; padding:0 24px; display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+.art-card{background:var(--white); border:1.5px solid var(--line); border-radius:14px; padding:26px; text-align:left; display:flex; flex-direction:column; gap:12px; min-height:260px; transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease; position:relative; overflow:hidden;}
+.art-card:hover{transform:translateY(-4px); border-color:var(--accent); box-shadow:0 20px 40px -22px rgba(28,43,74,.35);}
+.art-card:focus-visible{outline:3px solid var(--gold);}
+.art-num{font-family:var(--font-mono); font-size:12px; letter-spacing:.08em; color:var(--accent); font-weight:700;}
+.art-num-big{font-family:var(--font-display); font-size:46px; font-weight:600; color:var(--accent); line-height:1; margin:2px 0 4px;}
+.art-card h3{font-family:var(--font-display); font-size:20px; font-weight:600; margin:0;}
+.art-card p{font-size:14px; color:#524f42; line-height:1.55; margin:0; flex-grow:1;}
+.art-status{display:flex; align-items:center; justify-content:space-between; font-family:var(--font-mono); font-size:11.5px; color:#8a8570; text-transform:uppercase; letter-spacing:.05em; padding-top:6px; border-top:1px dashed var(--line);}
+.art-status .done-tag{color:var(--green); font-weight:700;}
+.art-card::before{content:""; position:absolute; top:0; left:0; right:0; height:5px; background:var(--accent);}
+
+/* ---- deep dive overlay ---- */
+.overlay{position:fixed; inset:0; background:var(--parchment); z-index:200; display:none; overflow-y:auto;}
+.overlay.active{display:block;}
+.dd-top{position:sticky; top:0; z-index:5; background:var(--parchment); border-bottom:1px solid var(--line); padding:14px 24px; display:flex; align-items:center; gap:16px;}
+.dd-close{background:none; border:1.5px solid var(--navy); color:var(--navy); width:36px; height:36px; border-radius:50%; font-size:16px; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.dd-crumb{font-family:var(--font-mono); font-size:13px; color:#726f5f;}
+.dd-crumb b{color:var(--accent);}
+
+.dd-body{max-width:760px; margin:0 auto; padding:44px 24px 120px;}
+.dd-eyebrow{font-family:var(--font-mono); font-size:12px; color:var(--accent); text-transform:uppercase; letter-spacing:.1em; display:block; margin-bottom:10px;}
+.dd-title{font-family:var(--font-display); font-size:clamp(28px,4vw,40px); font-weight:600; margin:0 0 8px; line-height:1.08;}
+.dd-tagline{font-size:16px; color:#4a4739; margin:0 0 40px; line-height:1.55;}
+
+.section-label{display:flex; align-items:center; gap:10px; margin:52px 0 18px;}
+.section-label .num{width:26px; height:26px; border-radius:50%; background:var(--accent); color:#fff; font-family:var(--font-mono); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.section-label h2{font-family:var(--font-display); font-size:20px; font-weight:600; margin:0;}
+
+.text-card{background:var(--white); border:1px solid var(--line); border-radius:12px; padding:24px 26px;}
+.text-card blockquote{font-family:var(--font-display); font-size:19px; font-style:normal; line-height:1.5; margin:0 0 14px; color:var(--navy); border-left:3px solid var(--accent); padding-left:16px;}
+.text-card p{font-size:15px; line-height:1.65; color:#3c3a33; margin:0;}
+.text-card p + p{margin-top:12px;}
+
+.sim-card{background:var(--navy-deep); border-radius:14px; padding:26px 22px; color:#fff; position:relative; overflow:hidden;}
+.sim-card::before{content:""; position:absolute; inset:0; background-image:linear-gradient(rgba(216,205,174,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(216,205,174,.06) 1px,transparent 1px); background-size:22px 22px; pointer-events:none;}
+.sim-inner{position:relative;}
+.sim-hint{font-family:var(--font-mono); font-size:11.5px; color:#9aa4bd; margin-bottom:16px; display:block;}
+
+.cta-row{display:flex; justify-content:center; margin-top:56px;}
+.btn{border:none; border-radius:999px; padding:14px 30px; font-weight:700; font-size:15px; transition:transform .15s ease;}
+.btn:hover{transform:translateY(-1px);}
+.btn:focus-visible{outline:3px solid var(--gold); outline-offset:2px;}
+.btn-primary{background:var(--accent); color:#fff;}
+.btn-ghost{background:transparent; color:var(--navy); border:1.5px solid var(--navy);}
+
+/* ===== Article 21: timeline widget ===== */
+.tl-wrap{display:flex; flex-direction:column; gap:26px;}
+.tl-track{display:flex; justify-content:space-between; position:relative; padding:0 4px;}
+.tl-track::before{content:""; position:absolute; top:9px; left:0; right:0; height:2px; background:rgba(255,255,255,.18);}
+.tl-node{background:none; border:none; color:#cdd4e2; display:flex; flex-direction:column; align-items:center; gap:8px; position:relative; z-index:1; flex:1;}
+.tl-dot{width:20px; height:20px; border-radius:50%; background:#2a3a5c; border:2px solid #46577f; transition:all .25s ease;}
+.tl-node.active .tl-dot{background:var(--accent); border-color:#fff; box-shadow:0 0 0 5px rgba(217,164,65,.2);}
+.tl-node span{font-family:var(--font-mono); font-size:11px;}
+.tl-stage{display:flex; align-items:center; gap:26px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:12px; padding:24px; min-height:180px;}
+.scope-ring-box{width:130px; height:130px; flex-shrink:0; display:flex; align-items:center; justify-content:center; position:relative;}
+.scope-ring-track{position:absolute; width:130px; height:130px; border-radius:50%; border:2px dashed rgba(255,255,255,.15);}
+.scope-ring{border-radius:50%; background:radial-gradient(circle at 35% 30%, var(--gold-bright), var(--accent)); transition:width .6s cubic-bezier(.2,.8,.2,1), height .6s cubic-bezier(.2,.8,.2,1); box-shadow:0 0 30px -6px var(--gold-bright);}
+.scope-pct{position:absolute; font-family:var(--font-mono); font-size:12px; color:#fff; bottom:-22px; text-align:center; width:100%;}
+.tl-detail{flex-grow:1;}
+.tl-detail .yr{font-family:var(--font-mono); color:var(--gold-bright); font-size:12px; letter-spacing:.05em; text-transform:uppercase;}
+.tl-detail h3{font-family:var(--font-display); font-size:19px; margin:6px 0 8px; font-weight:600;}
+.tl-detail p{font-size:14px; line-height:1.6; color:#c7cee0; margin:0;}
+
+/* ===== Article 32: writs widget ===== */
+.writ-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px;}
+.writ-card{background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:10px;}
+.writ-head{display:flex; justify-content:space-between; align-items:baseline;}
+.writ-head h4{font-family:var(--font-display); font-size:16px; margin:0; font-weight:600;}
+.writ-head span{font-family:var(--font-mono); font-size:10.5px; color:#9aa4bd; font-style:italic;}
+.writ-stage{height:80px; background:rgba(0,0,0,.2); border-radius:8px; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center;}
+.writ-desc{font-size:12.5px; line-height:1.5; color:#c7cee0; margin:0;}
+.writ-play{align-self:flex-start; background:rgba(217,164,65,.18); color:var(--gold-bright); border:1px solid rgba(217,164,65,.4); border-radius:99px; padding:6px 14px; font-size:11.5px; font-weight:700; font-family:var(--font-mono);}
+
+/* writ mini animations */
+.wcell{position:relative; width:80px; height:50px;}
+.wcell .bars{position:absolute; inset:0; display:flex; justify-content:space-between; transition:transform .5s ease, opacity .5s ease;}
+.wcell .bars i{width:3px; background:#8892ab; display:block;}
+.wcell .person{position:absolute; left:30px; top:14px; width:20px; height:20px; border-radius:50%; background:var(--gold-bright); transition:transform .6s ease;}
+.wcell.playing .bars{transform:translateX(-70px); opacity:0;}
+.wcell.playing .person{transform:translateX(50px);}
+
+.wgear{width:44px; height:44px; border-radius:50%; border:6px solid #46577f; position:relative; transition:border-color .4s ease;}
+.wgear::after{content:""; position:absolute; top:-8px; left:50%; width:6px; height:10px; background:#46577f; transform:translateX(-50%);}
+.wgear.playing{border-color:var(--gold-bright); animation:spin 1.1s linear infinite;}
+.wgear.playing::after{background:var(--gold-bright);}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.wstop-lane{position:relative; width:100px; height:10px; background:rgba(255,255,255,.08); border-radius:4px;}
+.wstop-arrow{position:absolute; left:0; top:-3px; width:0; height:0; border-top:8px solid transparent; border-bottom:8px solid transparent; border-left:14px solid var(--gold-bright); transition:left .8s ease;}
+.wstop-sign{position:absolute; right:10px; top:-14px; width:26px; height:26px; border-radius:50%; background:var(--maroon); color:#fff; font-family:var(--font-mono); font-size:9px; font-weight:700; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .3s ease .6s;}
+.wstop.playing .wstop-arrow{left:56px;}
+.wstop.playing .wstop-sign{opacity:1;}
+
+.wdoc{position:relative; width:60px; height:60px;}
+.wdoc .box{position:absolute; bottom:0; left:0; font-family:var(--font-mono); font-size:9px; color:#9aa4bd;}
+.wdoc .doc{position:absolute; bottom:14px; left:18px; width:22px; height:28px; background:#e9e2cc; border-radius:2px; transition:transform .7s ease;}
+.wdoc .box.top{top:0; bottom:auto; left:auto; right:0;}
+.wdoc.playing .doc{transform:translateY(-32px);}
+.wdoc-stamp{position:absolute; top:-4px; left:14px; font-size:16px; opacity:0; transition:opacity .3s ease .6s;}
+.wdoc.playing .wdoc-stamp{opacity:1;}
+
+.wchair{position:relative; width:44px; height:50px;}
+.wchair .seat{position:absolute; bottom:0; width:44px; height:14px; background:#46577f; border-radius:3px;}
+.wchair .back{position:absolute; bottom:12px; left:4px; width:6px; height:26px; background:#46577f; border-radius:2px;}
+.wchair .q{position:absolute; top:-6px; left:16px; font-family:var(--font-mono); font-weight:700; color:var(--gold-bright); font-size:16px; opacity:.4; transition:opacity .4s ease;}
+.wchair .figure{position:absolute; bottom:14px; left:12px; width:20px; height:20px; border-radius:50%; background:var(--gold-bright); transition:transform .6s ease, opacity .6s ease;}
+.wchair.playing .q{opacity:1;}
+.wchair.playing .figure{transform:translateY(-30px) translateX(20px); opacity:0;}
+
+/* ===== Article 368: amendment simulator ===== */
+.sim-tabs{display:flex; gap:8px; margin-bottom:22px; flex-wrap:wrap;}
+.sim-tab{background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.16); color:#c7cee0; padding:9px 16px; border-radius:99px; font-size:12.5px; font-family:var(--font-mono);}
+.sim-tab.active{background:var(--gold-bright); color:var(--navy-deep); font-weight:700; border-color:var(--gold-bright);}
+
+.house-row{display:flex; flex-direction:column; gap:16px; margin-bottom:18px;}
+.house{display:flex; align-items:center; gap:14px;}
+.house-label{width:96px; flex-shrink:0; font-family:var(--font-mono); font-size:12px; color:#c7cee0;}
+.house-bar-track{flex-grow:1; height:16px; background:rgba(255,255,255,.08); border-radius:99px; position:relative; overflow:visible;}
+.house-bar-fill{height:100%; border-radius:99px; width:0%; background:linear-gradient(90deg,var(--gold),var(--gold-bright)); transition:width 1s cubic-bezier(.2,.8,.2,1);}
+.house-threshold{position:absolute; top:-4px; bottom:-4px; width:2px; background:#fff; opacity:.6;}
+.house-threshold::after{content:attr(data-label); position:absolute; top:-18px; left:50%; transform:translateX(-50%); font-family:var(--font-mono); font-size:9.5px; color:#fff; white-space:nowrap;}
+
+.states-wrap{margin:22px 0 6px;}
+.states-title{font-family:var(--font-mono); font-size:11.5px; color:#9aa4bd; margin-bottom:10px; display:block;}
+.states-grid{display:flex; flex-wrap:wrap; gap:6px;}
+.state-chip{width:16px; height:16px; border-radius:3px; background:rgba(255,255,255,.1); transition:background .3s ease, transform .3s ease;}
+.state-chip.lit{background:var(--gold-bright); transform:scale(1.1);}
+
+.assent-row{display:flex; align-items:center; justify-content:center; gap:18px; margin-top:26px; padding-top:22px; border-top:1px dashed rgba(255,255,255,.15);}
+.assent-seal{width:64px; height:64px; border-radius:50%; border:3px solid #46577f; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:10px; color:#9aa4bd; transform:scale(1) rotate(-15deg); opacity:.4; transition:all .4s cubic-bezier(.34,1.56,.64,1);}
+.assent-seal.stamped{border-color:var(--green); color:#7fd9ac; opacity:1; transform:scale(1.08) rotate(0deg);}
+.assent-text{font-size:13px; color:#c7cee0; max-width:280px; line-height:1.5;}
+
+.sim-run{margin-top:22px; background:var(--gold-bright); color:var(--navy-deep); border:none; padding:12px 26px; border-radius:99px; font-weight:700; font-size:14px;}
+.sim-note{font-size:13.5px; color:#c7cee0; line-height:1.6; margin-top:18px; padding-top:16px; border-top:1px dashed rgba(255,255,255,.15); min-height:20px;}
+
+/* ===== quiz phase (reused pattern) ===== */
+.quiz-phase{display:none;}
+.quiz-phase.active{display:block;}
+.q-top-track{display:flex; gap:4px; margin-bottom:34px;}
+.q-seg{flex:1; height:6px; background:var(--parchment-dim); border-radius:99px; overflow:hidden;}
+.q-seg i{display:block; height:100%; width:0%; background:var(--accent); transition:width .3s ease;}
+.q-seg.filled i{width:100%;}
+.q-prompt{font-family:var(--font-display); font-size:22px; font-weight:600; margin:0 0 22px; line-height:1.3;}
+.opt-list{display:flex; flex-direction:column; gap:10px; margin-bottom:20px;}
+.opt{display:flex; align-items:center; gap:12px; background:var(--white); border:1.5px solid var(--line); border-radius:10px; padding:14px 16px; text-align:left; font-size:15.5px; color:var(--ink); transition:border-color .15s ease;}
+.opt:hover:not(:disabled){border-color:var(--accent);}
+.opt:focus-visible{outline:3px solid var(--gold); outline-offset:1px;}
+.opt .opt-letter{font-family:var(--font-mono); font-weight:700; font-size:13px; width:26px; height:26px; border-radius:50%; background:var(--parchment-dim); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.opt.correct{border-color:var(--green); background:#eef7f1;}
+.opt.correct .opt-letter{background:var(--green); color:#fff;}
+.opt.incorrect{border-color:var(--maroon); background:#fbeeee;}
+.opt.incorrect .opt-letter{background:var(--maroon); color:#fff;}
+.opt:disabled{cursor:default;}
+.feedback-box{border-radius:10px; padding:16px 18px; margin:6px 0 24px; font-size:15px; line-height:1.6; display:none;}
+.feedback-box.show{display:block;}
+.feedback-box.right{background:#eef7f1; border:1px solid var(--green); color:#1d4a35;}
+.feedback-box.wrong{background:#fbeeee; border:1px solid var(--maroon); color:#6d2828;}
+.feedback-box .fb-head{font-weight:700; font-family:var(--font-mono); font-size:12.5px; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:8px;}
+.btn-continue{background:var(--accent); color:#fff; padding:14px 32px; border-radius:10px; font-weight:700; font-size:15px; min-width:140px; border:none;}
+.btn-continue:disabled{background:#c7c2ac; cursor:not-allowed;}
+
+.complete-wrap{text-align:center; padding:20px 0;}
+.badge-seal{width:110px; height:110px; margin:0 auto 22px; border-radius:50%; background:conic-gradient(from 180deg,var(--navy),var(--accent),var(--navy)); display:flex; align-items:center; justify-content:center; position:relative;}
+.badge-seal::after{content:""; position:absolute; inset:8px; border-radius:50%; border:2px dashed rgba(255,255,255,.5);}
+.badge-seal span{font-family:var(--font-display); color:#fff; font-size:14px; font-weight:600;}
+.complete-stats{display:flex; justify-content:center; gap:28px; margin:22px 0 30px;}
+.complete-stat b{display:block; font-family:var(--font-display); font-size:26px; color:var(--navy);}
+.complete-stat span{font-family:var(--font-mono); font-size:11px; color:#726f5f; text-transform:uppercase; letter-spacing:.06em;}
+
+footer{padding:36px 24px; text-align:center; font-size:13px; color:#7a755f; font-family:var(--font-mono);}
+
+@media(max-width:820px){
+  .picker{grid-template-columns:1fr;}
+  .tl-stage{flex-direction:column; text-align:center;}
+  .topbar-stats{display:none;}
+  .house-label{width:76px; font-size:10.5px;}
+}
+@media (prefers-reduced-motion: reduce){ *{animation-duration:.001s !important; transition-duration:.001s !important;} }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="seal">SA</span> Sansthā</div>
+  <div class="topbar-stats">
+    <div class="stat-pill">⚡ <b id="topXp">0</b> XP</div>
+    <div class="stat-pill">🔥 <b id="topStreak">0</b> streak</div>
+    <div class="stat-pill">📜 <b id="topDone">0</b>/<b id="topTotal">0</b> articles</div>
+  </div>
+</div>
+
+<div class="hero">
+  <span class="eyebrow">Constitutional &amp; Legal Literacy · Prototype</span>
+  <h1>Meet the framers. Then watch their articles work.</h1>
+  <p>Pick a historical figure to be guided by, or jump straight to an article. Read the text in plain words, play with an interactive animation of how it functions in practice, then test what stuck.</p>
+</div>
+
+<!-- ================= GUIDE / CHARACTER SELECT ================= -->
+<section class="roster-section" id="rosterSection">
+  <div class="roster-inner">
+    <div class="roster-head">
+      <span class="eyebrow">Choose your guide</span>
+      <h2>The people behind the articles.</h2>
+      <p>Every article you're about to explore was shaped by someone in the room when it was drafted. Pick a figure to jump into the article they connect to most.</p>
+    </div>
+    <div class="roster-grid" id="rosterGrid"></div>
+  </div>
+</section>
+
+<div class="hero" style="padding-top:56px; padding-bottom:8px;">
+  <span class="eyebrow">Or browse directly</span>
+  <h1 style="font-size:clamp(26px,4vw,38px);">Pick an article. Watch how it actually works.</h1>
+</div>
+
+<div class="picker" id="picker"></div>
+
+<footer>Sansthā — prototype v3 · narrated by the framers, article by article</footer>
+
+<!-- ============ DEEP DIVE OVERLAY ============ -->
+<div class="overlay" id="ddOverlay">
+  <div class="dd-top">
+    <button class="dd-close" id="ddClose" aria-label="Back">✕</button>
+    <div class="dd-crumb">Article <b id="ddCrumbNum"></b> — <span id="ddCrumbPhase">Learn</span></div>
+  </div>
+
+  <div class="dd-body">
+    <!-- LEARN PHASE -->
+    <div id="learnPhase">
+      <span class="dd-eyebrow" id="ddEyebrow"></span>
+      <h1 class="dd-title" id="ddTitle"></h1>
+      <p class="dd-tagline" id="ddTagline"></p>
+
+      <div class="narrator-strip" id="narratorStrip"></div>
+
+      <div class="section-label"><span class="num">1</span><h2>In Plain Words</h2></div>
+      <div class="text-card" id="ddText"></div>
+
+      <div class="section-label"><span class="num">2</span><h2>See It Work</h2></div>
+      <div class="sim-card"><div class="sim-inner" id="ddSim"></div></div>
+
+      <div class="cta-row"><button class="btn btn-primary" id="toQuizBtn">Test what you learned →</button></div>
+    </div>
+
+    <!-- QUIZ PHASE -->
+    <div id="quizPhase" class="quiz-phase">
+      <div class="q-top-track" id="qTrack"></div>
+      <div id="qStage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   DATA
+========================================================= */
+const ARTICLES = [
+{
+  id:'a21', num:'21', accent:'#2f6b52', guide:'ambedkar',
+  title:'Right to Life and Personal Liberty',
+  cardBlurb:'One sentence, written narrow — read wide by fifty years of judges.',
+  tagline:'How a single line of text quietly became the anchor for privacy, environment, livelihood, and dignity.',
+  textHtml:`
+    <blockquote>"No person shall be deprived of his life or personal liberty except according to procedure established by law."</blockquote>
+    <p>That's the entire original text. It doesn't mention privacy, environment, food, or dignity anywhere. Everything you associate with Article 21 today — the right to a clean environment, to privacy, to livelihood, to a speedy trial — was <strong>read into</strong> those nineteen words by the Supreme Court over decades, not added by amendment.</p>
+    <p>This is the clearest example of the judiciary acting as an <em>institution</em>: not just applying the Constitution, but actively expanding what it means.</p>
+  `,
+  simType:'timeline',
+  quiz:[
+    {type:'mcq', prompt:'What does Article 21, in its original 1950 text, literally guarantee?', options:['A minimum standard of living','Life and personal liberty, protected against deprivation except by procedure established by law','The right to privacy','The right to a clean environment'], correct:1, explain:'The literal text only protects life and personal liberty from being taken away except through a legally established procedure — nothing about privacy or environment appears in the words themselves.'},
+    {type:'mcq', prompt:'What changed in Maneka Gandhi v. Union of India (1978)?', options:['Article 21 was formally amended by Parliament','The Court held the "procedure established by law" must itself be fair, just, and reasonable','The Supreme Court struck down Article 21 entirely','The President gained new powers over personal liberty'], correct:1, explain:'Maneka Gandhi linked Article 21 to Articles 14 and 19, effectively importing a "due process"-like fairness requirement — without any change to the constitutional text.'},
+    {type:'tf', prompt:'The right to a clean and healthy environment has been read into Article 21 by the courts.', correct:true, explain:'Through cases in the 1980s–90s, the judiciary held that "life" under Article 21 includes the right to live in a pollution-free environment.'},
+    {type:'mcq', prompt:'Which 2017 case held that the right to privacy is part of Article 21?', options:['A.K. Gopalan v. State of Madras','Maneka Gandhi v. Union of India','K.S. Puttaswamy v. Union of India','Kesavananda Bharati v. State of Kerala'], correct:2, explain:'A nine-judge bench in Puttaswamy unanimously held that privacy is intrinsic to life and personal liberty under Article 21.'},
+    {type:'mcq', prompt:'What does the growth of Article 21 mainly demonstrate about the judiciary as an institution?', options:['It can rewrite the Constitution\'s text directly','It can expand the meaning of existing text through interpretation, without a formal amendment','It has no real power over fundamental rights','It must wait for Parliament before recognising any new right'], correct:1, explain:'Article 21\'s growth is judicial interpretation at work — the text never changed, but its meaning expanded case by case.'}
+  ]
+},
+{
+  id:'a32', num:'32', accent:'#b8862f', guide:'ambedkar',
+  title:'Right to Constitutional Remedies',
+  cardBlurb:'The five writs that let a citizen move the Supreme Court directly.',
+  tagline:'Ambedkar called it the "heart and soul" of the Constitution — because a right without a remedy is just a sentence on paper.',
+  textHtml:`
+    <blockquote>"The right to move the Supreme Court by appropriate proceedings for the enforcement of the rights conferred by this Part is guaranteed."</blockquote>
+    <p>Article 32 does something unusual: it doesn't just let you approach the Supreme Court — the <em>right to approach it</em> is itself a fundamental right. Parliament can't quietly remove your ability to enforce your other rights.</p>
+    <p>The Court enforces this through five specific orders, called <strong>writs</strong> — each aimed at a different kind of institutional failure.</p>
+  `,
+  simType:'writs',
+  quiz:[
+    {type:'mcq', prompt:'Who famously called Article 32 "the heart and soul of the Constitution"?', options:['Jawaharlal Nehru','Dr. B.R. Ambedkar','Mahatma Gandhi','Sardar Vallabhbhai Patel'], correct:1, explain:'Ambedkar, chief architect of the Constitution, gave Article 32 this description in the Constituent Assembly debates.'},
+    {type:'mcq', prompt:'Which writ orders that an illegally detained person be produced before the court and released?', options:['Mandamus','Certiorari','Habeas Corpus','Quo Warranto'], correct:2, explain:'Habeas Corpus literally means "you may have the body" — it forces the detaining authority to justify or end the detention.'},
+    {type:'mcq', prompt:'A government officer is refusing to perform a duty they are legally required to do. Which writ compels them to act?', options:['Prohibition','Mandamus','Certiorari','Habeas Corpus'], correct:1, explain:'Mandamus ("we command") is used to force a public official or body to carry out a duty they are bound to perform.'},
+    {type:'mcq', prompt:'Which writ questions whether a person is legally entitled to hold the public office they occupy?', options:['Certiorari','Prohibition','Quo Warranto','Mandamus'], correct:2, explain:'Quo Warranto means "by what authority" — used to challenge someone\'s legal right to a public post.'},
+    {type:'tf', prompt:'Article 32 is itself a fundamental right, not just a procedure for enforcing other rights.', correct:true, explain:'That\'s exactly why it carries such institutional weight — the remedy is guaranteed with the same force as the rights it protects.'}
+  ]
+},
+{
+  id:'a368', num:'368', accent:'#8a3a3a', guide:'ambedkar',
+  title:'Amendment of the Constitution',
+  cardBlurb:'Not every change needs the same key — some doors need three.',
+  tagline:'A simulator for the three thresholds Parliament must clear, depending on what it wants to change.',
+  textHtml:`
+    <blockquote>"Parliament may in exercise of its constituent power amend by way of addition, variation or repeal any provision of this Constitution..."</blockquote>
+    <p>Article 368 gives Parliament real power to change the Constitution — but calibrates how hard that is depending on what's being changed. Ordinary provisions need a strong majority; anything touching the federal balance also needs the states themselves to agree.</p>
+    <p>And underneath all three tracks sits one invisible rule the Supreme Court added in 1973: however Parliament amends the Constitution, it can never destroy its <strong>basic structure</strong>.</p>
+  `,
+  simType:'amendsim',
+  quiz:[
+    {type:'mcq', prompt:'What is required for a "special majority" amendment under Article 368?', options:['A simple majority of members present','Majority of total membership AND two-thirds of members present and voting, in each House','Unanimous approval of both Houses','Approval by the Election Commission'], correct:1, explain:'This dual threshold — majority of total strength, plus two-thirds of those voting — is what makes it "special" compared to ordinary lawmaking.'},
+    {type:'mcq', prompt:'Which category of amendment additionally needs ratification by at least half the State Legislatures?', options:['Any amendment Parliament chooses to send to states','Amendments affecting federal provisions, like the distribution of powers between Centre and States','Only amendments to Fundamental Rights','Amendments proposed by a private member'], correct:1, explain:'Because these amendments touch the states\' own share of power, the states get a direct say through their legislatures.'},
+    {type:'tf', prompt:'The President can refuse to sign a Constitution Amendment Bill that Parliament has passed with the required majority.', correct:false, explain:'Unlike ordinary or money bills, the President has no discretion to withhold assent once a Constitutional Amendment Bill has been validly passed.'},
+    {type:'mcq', prompt:'What does the Basic Structure Doctrine (Kesavananda Bharati, 1973) limit?', options:['The President\'s veto power','Parliament\'s power to amend the Constitution in ways that destroy its core features','The Supreme Court\'s own jurisdiction','The Election Commission\'s independence'], correct:1, explain:'The doctrine says Parliament\'s amending power under Article 368, however procedurally valid, cannot be used to erase features like democracy, federalism, or judicial review.'},
+    {type:'mcq', prompt:'Which of these is generally treated as part of the Constitution\'s "basic structure"?', options:['Judicial review','Federalism','Secularism','All of the above'], correct:3, explain:'Judicial review, federalism, and secularism have all been recognised by the Supreme Court, across different cases, as part of the basic structure.'}
+  ]
+},
+{
+  id:'a1', num:'1', accent:'#138808', guide:'patel',
+  title:'Union of States',
+  cardBlurb:'Not a treaty between states — a Union they never had the right to leave.',
+  tagline:'How 500+ princely states became one indivisible Republic, and why Article 1 says "Union", never "Federation".',
+  textHtml:`
+    <blockquote>"India, that is Bharat, shall be a Union of States."</blockquote>
+    <p>That single word — <strong>Union</strong>, not "Federation" — was deliberate. A federation is usually formed when separate states voluntarily agree to come together, and can in theory walk back out. A Union has no such exit: states did not create India by treaty, and they cannot secede from it.</p>
+    <p>In 1947, India wasn't just British India — it was British India <em>plus</em> over 500 princely states, each technically free to join India, join Pakistan, or stay independent. Sardar Vallabhbhai Patel, as States Minister, and his secretary V.P. Menon persuaded almost all of them to sign an <strong>Instrument of Accession</strong> — through negotiation, incentives, and occasionally pressure — before the Constitution was even finished.</p>
+  `,
+  simType:'unify',
+  quiz:[
+    {type:'mcq', prompt:'Why does Article 1 call India a "Union of States" rather than a "Federation of States"?', options:['Because the words mean exactly the same thing','Because a Union implies states did not choose to join and cannot choose to leave','Because "Federation" was banned by the British','Because only Union Territories are covered by the Constitution'], correct:1, explain:'The framers chose "Union" precisely to signal that India\'s integrity does not depend on the continuing consent of its constituent states — there is no right to secede.'},
+    {type:'mcq', prompt:'Who is most closely associated with integrating the princely states into the Indian Union?', options:['Jawaharlal Nehru','Dr. Rajendra Prasad','Sardar Vallabhbhai Patel','B.R. Ambedkar'], correct:2, explain:'As States Minister, Patel — working closely with V.P. Menon — negotiated accession with the vast majority of princely states.'},
+    {type:'tf', prompt:'Every princely state joined the Indian Union peacefully and immediately after independence.', correct:false, explain:'Most acceded quickly, but a few — notably Junagadh, Hyderabad, and Jammu & Kashmir — involved referendums, police action, or special arrangements before full integration.'},
+    {type:'mcq', prompt:'What legal instrument did a princely state sign to formally join India?', options:['A Money Bill','An Instrument of Accession','A Presidential Ordinance','A Constitutional Amendment'], correct:1, explain:'The Instrument of Accession was the legal document by which a princely ruler ceded specific powers (defence, external affairs, communications) to the Dominion of India.'},
+    {type:'mcq', prompt:'Under Article 1, can a state secede from the Indian Union?', options:['Yes, with a two-thirds vote of its legislature','Yes, with Presidential approval','No — the Union has no provision allowing a state to leave','Yes, if the Supreme Court permits it'], correct:2, explain:'Unlike some federations, India\'s Constitution contains no mechanism for a state to secede — this is part of what "Union" is designed to mean.'}
+  ]
+},
+{
+  id:'a74', num:'74', accent:'#1c2b4a', guide:'nehru',
+  title:'Aid and Advice to the President',
+  cardBlurb:'A ceremonial head with the biggest desk in the country — and almost none of the discretion.',
+  tagline:'How Article 74 quietly moved real executive power from the President to a Prime Minister who answers to Parliament.',
+  textHtml:`
+    <blockquote>"There shall be a Council of Ministers with the Prime Minister at the head to aid and advise the President who shall, in the exercise of his functions, act in accordance with such advice."</blockquote>
+    <p>India borrowed its head-of-state design from the Westminster system: a <strong>President</strong> who holds enormous formal powers on paper — assenting to bills, appointing the Prime Minister, commanding the armed forces — but who is constitutionally bound to act on the advice of the Council of Ministers, not personal judgment.</p>
+    <p>The 42nd Amendment (1976) made this advice explicitly binding. The 44th Amendment (1978) added one safety valve: the President may send the advice back <em>once</em> for reconsideration, but must accept it if Parliament's ministers send it back unchanged. Real, accountable power sits with the Prime Minister and Cabinet — precisely because they can be removed by a no-confidence vote in the Lok Sabha, and the President cannot.</p>
+  `,
+  simType:'advice',
+  quiz:[
+    {type:'mcq', prompt:'Under Article 74, whose advice must the President act on?', options:['The Chief Justice of India','The Council of Ministers, headed by the Prime Minister','The Election Commission','The Speaker of the Lok Sabha'], correct:1, explain:'Article 74 makes the Council of Ministers, led by the Prime Minister, the body whose "aid and advice" binds the President\'s formal functions.'},
+    {type:'tf', prompt:'The President can permanently refuse to act on ministerial advice if they personally disagree with it.', correct:false, explain:'The President may return advice once for reconsideration, but must act on it once it is sent back — there is no permanent veto.'},
+    {type:'mcq', prompt:'What did the 44th Amendment (1978) add to Article 74?', options:['It removed the Council of Ministers entirely','It gave the President a permanent veto','It let the President send advice back once for reconsideration', 'It transferred the power to the Vice-President'], correct:2, explain:'The 44th Amendment restored a limited check: the President can ask the Council of Ministers to reconsider its advice once, but must follow it thereafter.'},
+    {type:'mcq', prompt:'Why is the Prime Minister, not the President, considered the "real" head of government in India?', options:['Because the Constitution says so explicitly in its title','Because the Prime Minister and Council of Ministers are accountable to the directly-elected Lok Sabha','Because the President has no formal powers at all','Because the President is appointed by the Prime Minister'], correct:1, explain:'Accountability is the key: the Council of Ministers can be removed by the Lok Sabha through a no-confidence motion, which grounds real power in it rather than in the President.'},
+    {type:'mcq', prompt:'This design — a symbolic head of state and a real, accountable head of government — is usually called what?', options:['A presidential executive','A parliamentary executive','A federal executive','A judicial executive'], correct:1, explain:'It is the classic "parliamentary executive" model, borrowed from the Westminster (British) system of government.'}
+  ]
+},
+{
+  id:'a108', num:'108', accent:'#b8862f', guide:'prasad',
+  title:'Joint Sitting of Both Houses',
+  cardBlurb:'The rare button Parliament can press when the two Houses simply refuse to agree.',
+  tagline:'Used only three times since 1950 — how a deadlock between Lok Sabha and Rajya Sabha finally gets broken.',
+  textHtml:`
+    <blockquote>"If after a Bill has been passed by one House... the other House rejects the Bill, or... the Houses have finally disagreed as to the amendments to be made in the Bill... the President may... notify... his intention to summon [the Houses] to meet in a joint sitting."</blockquote>
+    <p>Ordinary bills must pass both Houses of Parliament in the same form. Most of the time they do, after some back-and-forth. But occasionally the two Houses genuinely cannot agree — one rejects a bill outright, or won't accept the other's amendments, or lets six months pass without acting.</p>
+    <p>For exactly these deadlocks, <strong>Article 108</strong> lets the President call a joint sitting: both Houses meet together, the <strong>Speaker of the Lok Sabha</strong> presides (not the Rajya Sabha Chairman), and the bill is decided by a simple majority of members of both Houses present and voting, combined. Because the Lok Sabha is roughly twice the size of the Rajya Sabha, it usually wins any such vote — but the mechanism has only ever been used three times: for the Dowry Prohibition Bill (1961), the Banking Service Commission (Repeal) Bill (1978), and the Prevention of Terrorism Bill (2002). It does not apply to Money Bills or Constitutional Amendment Bills.</p>
+  `,
+  simType:'jointsitting',
+  quiz:[
+    {type:'mcq', prompt:'What triggers the possibility of a joint sitting under Article 108?', options:['The President personally dislikes a bill','The two Houses of Parliament reach a genuine deadlock on an ordinary bill','A state government requests it','The Supreme Court orders it'], correct:1, explain:'Article 108 exists specifically for cases where Lok Sabha and Rajya Sabha cannot agree on an ordinary bill — rejection, disagreement on amendments, or inaction for six months.'},
+    {type:'mcq', prompt:'Who presides over a joint sitting of both Houses?', options:['The President of India','The Vice-President','The Speaker of the Lok Sabha','The Chief Justice of India'], correct:2, explain:'By convention and rule, the Speaker of the Lok Sabha presides over a joint sitting, not the Rajya Sabha\'s Chairman (the Vice-President).'},
+    {type:'tf', prompt:'A Money Bill can be resolved through a joint sitting under Article 108.', correct:false, explain:'Money Bills follow a separate procedure under Article 109, where the Lok Sabha\'s will effectively prevails without needing a joint sitting.'},
+    {type:'mcq', prompt:'Why does the Lok Sabha usually prevail in a joint sitting?', options:['Only Lok Sabha members are allowed to vote','The Speaker has a special extra vote','The Lok Sabha has roughly twice as many members as the Rajya Sabha, so a combined simple-majority vote favours it','The Rajya Sabha is barred from voting on joint sitting bills'], correct:2, explain:'Since voting is by simple majority of all members present from both Houses combined, and the Lok Sabha is much larger, its numbers usually decide the outcome.'},
+    {type:'mcq', prompt:'Roughly how many times has a joint sitting actually been used in India\'s history?', options:['Never','Three times','About twenty times','Every year since 1950'], correct:1, explain:'Despite being available since 1950, a joint sitting has been used only three times — for bills in 1961, 1978, and 2002 — showing how rare a true deadlock is.'}
+  ]
+}
+];
+
+/* =========================================================
+   STATE
+========================================================= */
+const state = { xp:0, streak:0, progress:{} };
+ARTICLES.forEach(a => state.progress[a.id] = {done:false, correct:0, total:0});
+
+let current = null;
+let qIdx = 0;
+
+function renderTopStats(){
+  document.getElementById('topXp').textContent = state.xp;
+  document.getElementById('topStreak').textContent = state.streak;
+  document.getElementById('topDone').textContent = Object.values(state.progress).filter(p=>p.done).length;
+  document.getElementById('topTotal').textContent = ARTICLES.length;
+}
+
+/* =========================================================
+   CHARACTERS — the historical figures who narrate the articles
+========================================================= */
+const CHARACTERS = [
+  {
+    id:'ambedkar', name:'Dr. B.R. Ambedkar', cls:'The Chief Architect',
+    role:'Chairman of the Drafting Committee — wrote the rights and remedies that anchor this course',
+    target:'a32',
+    stats:[{l:'Legal drafting',v:99},{l:'Rights design',v:96},{l:'Oratory',v:85}],
+    icon:`<rect x="20" y="30" width="60" height="44" rx="3" fill="none" stroke="var(--navy-deep)" stroke-width="5"/>
+          <line x1="50" y1="30" x2="50" y2="74" stroke="var(--navy-deep)" stroke-width="4"/>
+          <line x1="28" y1="42" x2="44" y2="42" stroke="var(--navy-deep)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="28" y1="52" x2="44" y2="52" stroke="var(--navy-deep)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="56" y1="42" x2="72" y2="42" stroke="var(--navy-deep)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="56" y1="52" x2="72" y2="52" stroke="var(--navy-deep)" stroke-width="4" stroke-linecap="round"/>`
+  },
+  {
+    id:'nehru', name:'Jawaharlal Nehru', cls:'The First Executive',
+    role:'India\u2019s first Prime Minister — moved the Objectives Resolution that shaped the Preamble',
+    target:'a74',
+    stats:[{l:'Diplomacy',v:94},{l:'Vision',v:90},{l:'Institution-building',v:88}],
+    icon:`<circle cx="50" cy="42" r="8" fill="var(--navy-deep)"/>
+          <circle cx="36" cy="32" r="8" fill="none" stroke="var(--navy-deep)" stroke-width="4"/>
+          <circle cx="64" cy="32" r="8" fill="none" stroke="var(--navy-deep)" stroke-width="4"/>
+          <circle cx="36" cy="52" r="8" fill="none" stroke="var(--navy-deep)" stroke-width="4"/>
+          <circle cx="64" cy="52" r="8" fill="none" stroke="var(--navy-deep)" stroke-width="4"/>
+          <line x1="50" y1="50" x2="50" y2="82" stroke="var(--navy-deep)" stroke-width="4" stroke-linecap="round"/>`
+  },
+  {
+    id:'patel', name:'Sardar Vallabhbhai Patel', cls:'The Unifier',
+    role:'Integrated over 500 princely states into a single Union',
+    target:'a1',
+    stats:[{l:'Negotiation',v:97},{l:'Resolve',v:95},{l:'Federal design',v:80}],
+    icon:`<circle cx="36" cy="42" r="14" fill="none" stroke="var(--navy-deep)" stroke-width="5"/>
+          <circle cx="64" cy="42" r="14" fill="none" stroke="var(--navy-deep)" stroke-width="5"/>
+          <path d="M36 56 C 36 70, 64 70, 64 56" fill="none" stroke="var(--navy-deep)" stroke-width="5"/>`
+  },
+  {
+    id:'prasad', name:'Dr. Rajendra Prasad', cls:'The Presiding Officer',
+    role:'Presided over the Constituent Assembly, then became India\u2019s first President',
+    target:'a108',
+    stats:[{l:'Procedure',v:93},{l:'Consensus-building',v:90},{l:'Patience',v:97}],
+    icon:`<rect x="26" y="30" width="48" height="40" rx="6" fill="none" stroke="var(--navy-deep)" stroke-width="5"/>
+          <circle cx="26" cy="30" r="5.5" fill="var(--navy-deep)"/>
+          <circle cx="26" cy="70" r="5.5" fill="var(--navy-deep)"/>
+          <circle cx="74" cy="30" r="5.5" fill="var(--navy-deep)"/>
+          <circle cx="74" cy="70" r="5.5" fill="var(--navy-deep)"/>
+          <line x1="36" y1="42" x2="64" y2="42" stroke="var(--navy-deep)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="36" y1="52" x2="64" y2="52" stroke="var(--navy-deep)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="36" y1="62" x2="56" y2="62" stroke="var(--navy-deep)" stroke-width="4" stroke-linecap="round"/>`
+  }
+];
+
+function charById(id){ return CHARACTERS.find(c => c.id === id); }
+
+function renderRoster(){
+  const grid = document.getElementById('rosterGrid');
+  grid.innerHTML = '';
+  CHARACTERS.forEach(c => {
+    const card = document.createElement('button');
+    card.className = 'char-card';
+    card.setAttribute('aria-label', `${c.name} — jump to Article ${c.target}`);
+    card.innerHTML = `
+      <div class="char-portrait">
+        <span class="char-class">${c.cls}</span>
+        <svg viewBox="0 0 100 100">${c.icon}</svg>
+      </div>
+      <div class="char-body">
+        <h3>${c.name}</h3>
+        <span class="char-role">${c.role}</span>
+        <div class="char-stats">
+          ${c.stats.map(s => `
+            <div class="char-stat-row">
+              <span>${s.l}</span>
+              <div class="char-stat-track"><div class="char-stat-fill" style="width:${s.v}%"></div></div>
+            </div>
+          `).join('')}
+        </div>
+        <span class="char-link">Jump to Article ${c.target.replace('a','')} <span class="arrow">→</span></span>
+      </div>
+    `;
+    card.addEventListener('click', () => openArticle(c.target));
+    grid.appendChild(card);
+  });
+}
+
+/* =========================================================
+   PICKER
+========================================================= */
+function renderPicker(){
+  const wrap = document.getElementById('picker');
+  wrap.innerHTML = '';
+  ARTICLES.forEach(a => {
+    const p = state.progress[a.id];
+    const card = document.createElement('button');
+    card.className = 'art-card';
+    card.style.setProperty('--accent', a.accent);
+    const guide = charById(a.guide);
+    card.innerHTML = `
+      <span class="art-num">ARTICLE</span>
+      <span class="art-num-big">${a.num}</span>
+      <h3>${a.title}</h3>
+      <p>${a.cardBlurb}</p>
+      ${guide ? `<span class="art-guide-tag">🎙 Narrated by ${guide.name}</span>` : ''}
+      <div class="art-status">
+        <span>${a.quiz.length} questions</span>
+        <span class="${p.done?'done-tag':''}">${p.done ? '✓ Completed · '+p.correct+'/'+p.total : 'Not started'}</span>
+      </div>
+    `;
+    card.addEventListener('click', () => openArticle(a.id));
+    wrap.appendChild(card);
+  });
+  renderTopStats();
+}
+
+/* =========================================================
+   DEEP DIVE — LEARN PHASE
+========================================================= */
+function openArticle(id){
+  current = ARTICLES.find(a => a.id === id);
+  qIdx = 0;
+  document.documentElement.style.setProperty('--accent', current.accent);
+  document.getElementById('ddOverlay').style.setProperty('--accent', current.accent);
+  document.getElementById('ddOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('ddCrumbNum').textContent = current.num;
+  document.getElementById('ddCrumbPhase').textContent = 'Learn';
+  document.getElementById('ddEyebrow').textContent = 'Article ' + current.num;
+  document.getElementById('ddTitle').textContent = current.title;
+  document.getElementById('ddTagline').textContent = current.tagline;
+  document.getElementById('ddText').innerHTML = current.textHtml;
+
+  const guide = charById(current.guide);
+  const narratorEl = document.getElementById('narratorStrip');
+  if(guide){
+    narratorEl.style.display = 'flex';
+    narratorEl.innerHTML = `
+      <div class="narrator-portrait"><svg viewBox="0 0 100 100">${guide.icon}</svg></div>
+      <div class="narrator-text"><b>Guided by ${guide.name}</b><span>${guide.cls}</span></div>
+    `;
+  } else {
+    narratorEl.style.display = 'none';
+  }
+
+  document.getElementById('learnPhase').style.display = 'block';
+  document.getElementById('quizPhase').classList.remove('active');
+
+  const simHost = document.getElementById('ddSim');
+  simHost.innerHTML = '';
+  if(current.simType === 'timeline') renderTimelineSim(simHost);
+  if(current.simType === 'writs') renderWritsSim(simHost);
+  if(current.simType === 'amendsim') renderAmendSim(simHost);
+  if(current.simType === 'unify') renderUnifySim(simHost);
+  if(current.simType === 'advice') renderAdviceSim(simHost);
+  if(current.simType === 'jointsitting') renderJointSittingSim(simHost);
+
+  document.getElementById('ddBody') && document.getElementById('ddBody').scrollTo({top:0});
+  window.scrollTo({top:0});
+}
+
+function closeOverlay(){
+  document.getElementById('ddOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+  renderPicker();
+}
+document.getElementById('ddClose').addEventListener('click', closeOverlay);
+
+document.getElementById('toQuizBtn').addEventListener('click', () => {
+  document.getElementById('learnPhase').style.display = 'none';
+  document.getElementById('quizPhase').classList.add('active');
+  document.getElementById('ddCrumbPhase').textContent = 'Test yourself';
+  qIdx = 0;
+  buildQuizTrack();
+  renderQuestion();
+  window.scrollTo({top:0});
+});
+
+/* =========================================================
+   SIM 1 — ARTICLE 21 TIMELINE
+========================================================= */
+const A21_ERAS = [
+  {year:'1950', name:'A.K. Gopalan v. State of Madras', scope:18, desc:'The Court reads Article 21 literally: if a law lays down *some* procedure — however unfair — that satisfies "procedure established by law." Personal liberty is protected only narrowly.'},
+  {year:'1978', name:'Maneka Gandhi v. Union of India', scope:42, desc:'The Court links Articles 14, 19 and 21 together, and demands that any procedure depriving liberty be fair, just and reasonable — importing the spirit of due process.'},
+  {year:'1980s–90s', name:'Olga Tellis, Bandhua Mukti Morcha &amp; others', scope:68, desc:'"Life" is read to mean more than mere survival: right to livelihood, a clean environment, education, and health are all folded into Article 21.'},
+  {year:'2017', name:'K.S. Puttaswamy v. Union of India', scope:90, desc:'A nine-judge bench unanimously holds that the right to privacy is intrinsic to life and personal liberty under Article 21.'},
+  {year:'Today', name:'A living, expanding right', scope:100, desc:'Article 21 now anchors dignity, privacy, environment, and fair legal process — grown almost entirely through interpretation, not a single word of amendment.'}
+];
+
+function renderTimelineSim(host){
+  host.innerHTML = `
+    <span class="sim-hint">Click through the eras — watch the scope of Article 21 grow</span>
+    <div class="tl-wrap">
+      <div class="tl-track" id="tlTrack"></div>
+      <div class="tl-stage">
+        <div class="scope-ring-box">
+          <div class="scope-ring-track"></div>
+          <div class="scope-ring" id="scopeRing"></div>
+          <div class="scope-pct" id="scopePct"></div>
+        </div>
+        <div class="tl-detail">
+          <span class="yr" id="tlYear"></span>
+          <h3 id="tlName"></h3>
+          <p id="tlDesc"></p>
+        </div>
+      </div>
+    </div>
+  `;
+  const track = document.getElementById('tlTrack');
+  A21_ERAS.forEach((e,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tl-node';
+    btn.innerHTML = `<div class="tl-dot"></div><span>${e.year}</span>`;
+    btn.addEventListener('click', () => setTlEra(i));
+    track.appendChild(btn);
+  });
+  setTlEra(0);
+}
+function setTlEra(i){
+  const e = A21_ERAS[i];
+  document.querySelectorAll('#tlTrack .tl-node').forEach((n,idx) => n.classList.toggle('active', idx===i));
+  const px = 40 + (e.scope/100)*90; // 40 to 130
+  const ring = document.getElementById('scopeRing');
+  ring.style.width = px+'px';
+  ring.style.height = px+'px';
+  document.getElementById('scopePct').textContent = 'Scope: ' + e.scope + '%';
+  document.getElementById('tlYear').textContent = e.year;
+  document.getElementById('tlName').textContent = e.name;
+  document.getElementById('tlDesc').innerHTML = e.desc;
+}
+
+/* =========================================================
+   SIM 2 — ARTICLE 32 WRITS
+========================================================= */
+const WRITS = [
+  {id:'habeas', name:'Habeas Corpus', latin:'"You may have the body"', desc:'Orders a detained person be produced before the court, and released if the detention is unlawful.', stage:`<div class="wcell"><div class="bars"><i></i><i></i><i></i><i></i></div><div class="person"></div></div>`, cls:'wcell'},
+  {id:'mandamus', name:'Mandamus', latin:'"We command"', desc:'Orders a public official or body to perform a legal duty they have failed to carry out.', stage:`<div class="wgear"></div>`, cls:'wgear'},
+  {id:'prohibition', name:'Prohibition', latin:'"To forbid"', desc:'Stops a lower court or tribunal from exceeding its jurisdiction, before it decides the case.', stage:`<div class="wstop"><div class="wstop-lane"><div class="wstop-arrow"></div><div class="wstop-sign">STOP</div></div></div>`, cls:'wstop'},
+  {id:'certiorari', name:'Certiorari', latin:'"To be certified"', desc:'Transfers or quashes a case from a lower body that acted beyond its power or against fairness.', stage:`<div class="wdoc"><span class="box top">SC</span><span class="box">Lower Court</span><div class="doc"></div><div class="wdoc-stamp">✕</div></div>`, cls:'wdoc'},
+  {id:'quowarranto', name:'Quo Warranto', latin:'"By what authority"', desc:'Challenges a person\'s legal right to hold a public office, and can remove them if it\'s unlawful.', stage:`<div class="wchair"><div class="q">?</div><div class="figure"></div><div class="back"></div><div class="seat"></div></div>`, cls:'wchair'}
+];
+
+function renderWritsSim(host){
+  host.innerHTML = `
+    <span class="sim-hint">Click "Play" on each writ to see what it does</span>
+    <div class="writ-grid" id="writGrid"></div>
+  `;
+  const grid = document.getElementById('writGrid');
+  WRITS.forEach(w => {
+    const card = document.createElement('div');
+    card.className = 'writ-card';
+    card.innerHTML = `
+      <div class="writ-head"><h4>${w.name}</h4><span>${w.latin}</span></div>
+      <div class="writ-stage">${w.stage}</div>
+      <p class="writ-desc">${w.desc}</p>
+      <button class="writ-play" data-id="${w.id}">▶ Play</button>
+    `;
+    grid.appendChild(card);
+  });
+  grid.querySelectorAll('.writ-play').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const w = WRITS.find(x => x.id === btn.dataset.id);
+      const stageEl = btn.parentElement.querySelector('.writ-stage > div');
+      stageEl.classList.remove('playing');
+      void stageEl.offsetWidth; // restart animation
+      stageEl.classList.add('playing');
+    });
+  });
+}
+
+/* =========================================================
+   SIM 3 — ARTICLE 368 AMENDMENT SIMULATOR
+========================================================= */
+const AMEND_TRACKS = {
+  simple:{label:'Simple Majority', ls:50, rs:50, states:false, note:'Used for matters like forming new states or altering boundaries — technically outside Article 368, passed like an ordinary law with a simple majority of members present and voting.'},
+  special:{label:'Special Majority', ls:67, rs:67, states:false, note:'Used for most constitutional amendments — needs a majority of the total membership of each House, AND two-thirds of members present and voting.'},
+  states:{label:'Special Majority + States', ls:67, rs:67, states:true, note:'Used for amendments touching federal provisions (like the distribution of powers). Needs the same special majority in Parliament, plus ratification by at least half of the State Legislatures.'}
+};
+
+function renderAmendSim(host){
+  host.innerHTML = `
+    <span class="sim-hint">Choose a track, then run the simulation</span>
+    <div class="sim-tabs" id="simTabs"></div>
+    <div class="house-row">
+      <div class="house">
+        <div class="house-label">Lok Sabha</div>
+        <div class="house-bar-track"><div class="house-threshold" id="lsThresh" data-label=""></div><div class="house-bar-fill" id="lsFill"></div></div>
+      </div>
+      <div class="house">
+        <div class="house-label">Rajya Sabha</div>
+        <div class="house-bar-track"><div class="house-threshold" id="rsThresh" data-label=""></div><div class="house-bar-fill" id="rsFill"></div></div>
+      </div>
+    </div>
+    <div class="states-wrap" id="statesWrap" style="display:none;">
+      <span class="states-title">STATE LEGISLATURES RATIFYING</span>
+      <div class="states-grid" id="statesGrid"></div>
+    </div>
+    <div class="assent-row">
+      <div class="assent-seal" id="assentSeal">ASSENT</div>
+      <p class="assent-text" id="assentText">Run the simulation to see the bill reach the President.</p>
+    </div>
+    <div style="text-align:center;"><button class="sim-run" id="simRun">▶ Run simulation</button></div>
+    <p class="sim-note" id="simNote"></p>
+  `;
+  const tabs = document.getElementById('simTabs');
+  let activeTrack = 'special';
+  Object.entries(AMEND_TRACKS).forEach(([key,t]) => {
+    const b = document.createElement('button');
+    b.className = 'sim-tab' + (key===activeTrack ? ' active' : '');
+    b.textContent = t.label;
+    b.addEventListener('click', () => {
+      activeTrack = key;
+      tabs.querySelectorAll('.sim-tab').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      resetSim();
+    });
+    tabs.appendChild(b);
+  });
+
+  const statesGrid = document.getElementById('statesGrid');
+  for(let i=0;i<28;i++){
+    const chip = document.createElement('div');
+    chip.className = 'state-chip';
+    statesGrid.appendChild(chip);
+  }
+
+  function resetSim(){
+    document.getElementById('lsFill').style.width = '0%';
+    document.getElementById('rsFill').style.width = '0%';
+    document.getElementById('assentSeal').classList.remove('stamped');
+    document.getElementById('assentText').textContent = 'Run the simulation to see the bill reach the President.';
+    document.getElementById('simNote').textContent = '';
+    document.querySelectorAll('.state-chip').forEach(c => c.classList.remove('lit'));
+    const t = AMEND_TRACKS[activeTrack];
+    document.getElementById('lsThresh').style.left = t.ls + '%';
+    document.getElementById('lsThresh').dataset.label = t.ls + '%';
+    document.getElementById('rsThresh').style.left = t.rs + '%';
+    document.getElementById('rsThresh').dataset.label = t.rs + '%';
+    document.getElementById('statesWrap').style.display = t.states ? 'block' : 'none';
+  }
+
+  document.getElementById('simRun').addEventListener('click', () => {
+    const t = AMEND_TRACKS[activeTrack];
+    resetSim();
+    requestAnimationFrame(() => {
+      setTimeout(() => { document.getElementById('lsFill').style.width = t.ls + '%'; }, 100);
+      setTimeout(() => { document.getElementById('rsFill').style.width = t.rs + '%'; }, 700);
+      let delay = 1400;
+      if(t.states){
+        const chips = document.querySelectorAll('.state-chip');
+        const toLight = 15; // just over half of 28
+        for(let i=0;i<toLight;i++){
+          setTimeout(() => chips[i].classList.add('lit'), delay + i*70);
+        }
+        delay = delay + toLight*70 + 400;
+      }
+      setTimeout(() => {
+        document.getElementById('assentSeal').classList.add('stamped');
+        document.getElementById('assentText').textContent = 'Passed. The President has no discretion left — assent must follow.';
+      }, delay);
+      setTimeout(() => {
+        document.getElementById('simNote').textContent = t.note;
+      }, delay + 300);
+    });
+  });
+
+  resetSim();
+}
+
+/* =========================================================
+   SIM 4 — ARTICLE 1: PRINCELY STATE INTEGRATION
+========================================================= */
+function renderUnifySim(host){
+  host.innerHTML = `
+    <span class="sim-hint">Press integrate and watch Patel bring the states in, one by one</span>
+    <div class="states-wrap" style="margin-top:0;">
+      <span class="states-title">PRINCELY STATES ACCEDING TO THE UNION</span>
+      <div class="states-grid" id="unifyGrid"></div>
+    </div>
+    <div class="assent-row">
+      <div class="assent-seal" id="unifySeal">0</div>
+      <p class="assent-text" id="unifyText">Press "Integrate" to begin the accession process, 1947–1950.</p>
+    </div>
+    <div style="text-align:center;"><button class="sim-run" id="unifyRun">▶ Integrate the states</button></div>
+    <p class="sim-note" id="unifyNote"></p>
+  `;
+  const grid = document.getElementById('unifyGrid');
+  const TOTAL_CHIPS = 60; // each chip stands for several princely states
+  for(let i=0;i<TOTAL_CHIPS;i++){
+    const chip = document.createElement('div');
+    chip.className = 'state-chip';
+    grid.appendChild(chip);
+  }
+  const NOTES = [
+    'Most rulers signed the Instrument of Accession quickly, handing over defence, external affairs and communications to India.',
+    'Junagadh\'s ruler initially acceded to Pakistan; a plebiscite later confirmed the people\'s wish to join India.',
+    'Hyderabad held out until "Police Action" in September 1948 brought it into the Union.',
+    'Jammu & Kashmir acceded in October 1947 after the Maharaja sought India\'s help against a tribal invasion.'
+  ];
+
+  document.getElementById('unifyRun').addEventListener('click', () => {
+    const chips = document.querySelectorAll('#unifyGrid .state-chip');
+    chips.forEach(c => c.classList.remove('lit'));
+    document.getElementById('unifySeal').textContent = '0';
+    document.getElementById('unifySeal').classList.remove('stamped');
+    document.getElementById('unifyNote').textContent = '';
+    let count = 0;
+    chips.forEach((chip, i) => {
+      setTimeout(() => {
+        chip.classList.add('lit');
+        count += 9; // ~500+ states across 60 chips
+        document.getElementById('unifySeal').textContent = count > 550 ? '550+' : count;
+      }, i * 45);
+    });
+    const totalDelay = chips.length * 45 + 300;
+    setTimeout(() => {
+      document.getElementById('unifySeal').classList.add('stamped');
+      document.getElementById('unifyText').textContent = 'By 1950, virtually every princely state had acceded — India became one indivisible Union, not a league of separate states.';
+      document.getElementById('unifyNote').innerHTML = NOTES.join(' ');
+    }, totalDelay);
+  });
+}
+
+/* =========================================================
+   SIM 5 — ARTICLE 74: PRESIDENT AID & ADVICE TOGGLE
+========================================================= */
+const ADVICE_SCENARIOS = {
+  follows:{
+    label:'President acts on advice',
+    outcome:'The bill is signed, the ordinance issued, the appointment made — exactly as the Council of Ministers advised.',
+    note:'This is the constitutional default under Article 74(1): the President\'s formal powers are exercised on the aid and advice of a Council of Ministers accountable to the Lok Sabha.'
+  },
+  reconsider:{
+    label:'President asks for reconsideration',
+    outcome:'The advice is sent back once, with the President\'s concerns noted — but the Council of Ministers can simply resend it unchanged.',
+    note:'The 44th Amendment (1978) allows exactly one round of reconsideration. It is a delay, not a veto.'
+  },
+  alone:{
+    label:'President tries to act alone',
+    outcome:'Unconstitutional. Once reconsidered advice is resent, the President "shall" act on it — there is no legal path to ignore it.',
+    note:'Article 74(1) uses the word "shall" — this is binding language, not a suggestion, which is what makes India\'s President a constitutional (not an executive) head of state.'
+  }
+};
+
+function renderAdviceSim(host){
+  host.innerHTML = `
+    <span class="sim-hint">Choose what the President tries to do, and see what the Constitution actually allows</span>
+    <div class="sim-tabs" id="adviceTabs"></div>
+    <div class="tl-stage" style="margin-top:6px;">
+      <div class="scope-ring-box">
+        <div class="scope-ring-track"></div>
+        <div class="scope-ring" id="adviceRing" style="width:70px;height:70px;"></div>
+      </div>
+      <div class="tl-detail">
+        <span class="yr">OUTCOME</span>
+        <h3 id="adviceOutcome"></h3>
+        <p id="adviceNote"></p>
+      </div>
+    </div>
+  `;
+  const tabs = document.getElementById('adviceTabs');
+  Object.entries(ADVICE_SCENARIOS).forEach(([key, s], i) => {
+    const b = document.createElement('button');
+    b.className = 'sim-tab' + (i === 0 ? ' active' : '');
+    b.textContent = s.label;
+    b.addEventListener('click', () => {
+      tabs.querySelectorAll('.sim-tab').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      setAdvice(key);
+    });
+    tabs.appendChild(b);
+  });
+  setAdvice('follows');
+
+  function setAdvice(key){
+    const s = ADVICE_SCENARIOS[key];
+    const ring = document.getElementById('adviceRing');
+    ring.style.background = key === 'alone'
+      ? 'radial-gradient(circle at 35% 30%, #d97a7a, var(--maroon))'
+      : 'radial-gradient(circle at 35% 30%, var(--gold-bright), var(--accent))';
+    document.getElementById('adviceOutcome').textContent = s.outcome;
+    document.getElementById('adviceNote').textContent = s.note;
+  }
+}
+
+/* =========================================================
+   SIM 6 — ARTICLE 108: JOINT SITTING DEADLOCK
+========================================================= */
+function renderJointSittingSim(host){
+  host.innerHTML = `
+    <span class="sim-hint">Run the deadlock, then call the joint sitting</span>
+    <div class="house-row">
+      <div class="house">
+        <div class="house-label">Lok Sabha</div>
+        <div class="house-bar-track"><div class="house-bar-fill" id="jsLs" style="background:linear-gradient(90deg,var(--green),#4a9b78);"></div></div>
+      </div>
+      <div class="house">
+        <div class="house-label">Rajya Sabha</div>
+        <div class="house-bar-track"><div class="house-bar-fill" id="jsRs" style="background:linear-gradient(90deg,var(--maroon),#c05f5f);"></div></div>
+      </div>
+      <div class="house">
+        <div class="house-label">Joint sitting</div>
+        <div class="house-bar-track"><div class="house-threshold" style="left:50%;" data-label="50%"></div><div class="house-bar-fill" id="jsJoint"></div></div>
+      </div>
+    </div>
+    <div class="assent-row">
+      <div class="assent-seal" id="jsSeal">ASSENT</div>
+      <p class="assent-text" id="jsText">Run the simulation to see a bill move from deadlock to a joint sitting.</p>
+    </div>
+    <div style="text-align:center;"><button class="sim-run" id="jsRun">▶ Simulate the deadlock</button></div>
+    <p class="sim-note" id="jsNote"></p>
+  `;
+
+  function reset(){
+    document.getElementById('jsLs').style.width = '0%';
+    document.getElementById('jsRs').style.width = '0%';
+    document.getElementById('jsJoint').style.width = '0%';
+    document.getElementById('jsSeal').classList.remove('stamped');
+    document.getElementById('jsText').textContent = 'Run the simulation to see a bill move from deadlock to a joint sitting.';
+    document.getElementById('jsNote').textContent = '';
+  }
+  reset();
+
+  document.getElementById('jsRun').addEventListener('click', () => {
+    reset();
+    setTimeout(() => { document.getElementById('jsLs').style.width = '100%'; }, 150);
+    setTimeout(() => { document.getElementById('jsRs').style.width = '35%'; }, 750);
+    setTimeout(() => { document.getElementById('jsText').textContent = 'Rajya Sabha rejects the bill — the two Houses have reached a genuine deadlock.'; }, 1300);
+    setTimeout(() => { document.getElementById('jsJoint').style.width = '62%'; }, 2000);
+    setTimeout(() => {
+      document.getElementById('jsSeal').classList.add('stamped');
+      document.getElementById('jsText').textContent = 'The President summons a joint sitting. Voting together, the Lok Sabha\'s larger numbers carry the bill past the majority threshold.';
+      document.getElementById('jsNote').textContent = 'This exact mechanism has been used only three times since 1950 — deadlocks this stubborn are rare.';
+    }, 2700);
+  });
+}
+
+/* =========================================================
+   QUIZ ENGINE
+========================================================= */
+function buildQuizTrack(){
+  const track = document.getElementById('qTrack');
+  track.innerHTML = '';
+  current.quiz.forEach((_,i) => {
+    const seg = document.createElement('div');
+    seg.className = 'q-seg';
+    seg.innerHTML = '<i></i>';
+    track.appendChild(seg);
+  });
+}
+function updateQuizTrack(){
+  document.querySelectorAll('.q-seg').forEach((seg,i) => seg.classList.toggle('filled', i < qIdx));
+}
+
+function renderQuestion(){
+  updateQuizTrack();
+  const stage = document.getElementById('qStage');
+  const prog = state.progress[current.id];
+
+  if(qIdx >= current.quiz.length){
+    prog.done = true;
+    const earned = 20 + prog.correct * 8;
+    state.xp += earned;
+    state.streak += 1;
+    stage.innerHTML = `
+      <div class="complete-wrap">
+        <div class="badge-seal"><span>SEAL</span></div>
+        <span class="dd-eyebrow" style="text-align:center; display:block;">Article ${current.num} complete</span>
+        <h2 class="dd-title" style="font-size:26px;">${current.title}</h2>
+        <div class="complete-stats">
+          <div class="complete-stat"><b>+${earned}</b><span>XP earned</span></div>
+          <div class="complete-stat"><b>${prog.correct}/${prog.total}</b><span>Correct</span></div>
+          <div class="complete-stat"><b>${state.streak}</b><span>Streak</span></div>
+        </div>
+        <div class="cta-row"><button class="btn btn-primary" id="backToMapBtn">Back to articles</button></div>
+      </div>
+    `;
+    document.getElementById('backToMapBtn').addEventListener('click', closeOverlay);
+    renderTopStats();
+    return;
+  }
+
+  const step = current.quiz[qIdx];
+  if(step.type === 'mcq'){
+    stage.innerHTML = `
+      <p class="q-prompt">${step.prompt}</p>
+      <div class="opt-list" id="optList">
+        ${step.options.map((opt,i) => `<button class="opt" data-i="${i}"><span class="opt-letter">${String.fromCharCode(65+i)}</span><span>${opt}</span></button>`).join('')}
+      </div>
+      <div class="feedback-box" id="fbBox"></div>
+      <div class="quiz-nav"><button class="btn-continue" id="qContinue" disabled>Continue</button></div>
+    `;
+    document.querySelectorAll('#optList .opt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const opts = document.querySelectorAll('#optList .opt');
+        opts.forEach(o => o.disabled = true);
+        const chosen = parseInt(btn.dataset.i,10);
+        const isCorrect = chosen === step.correct;
+        opts[step.correct].classList.add('correct');
+        if(!isCorrect) btn.classList.add('incorrect');
+        registerAnswer(isCorrect, step.explain);
+      });
+    });
+  } else {
+    stage.innerHTML = `
+      <p class="q-prompt">${step.prompt}</p>
+      <div class="opt-list" id="optList">
+        <button class="opt" data-v="true"><span class="opt-letter">T</span><span>True</span></button>
+        <button class="opt" data-v="false"><span class="opt-letter">F</span><span>False</span></button>
+      </div>
+      <div class="feedback-box" id="fbBox"></div>
+      <div class="quiz-nav"><button class="btn-continue" id="qContinue" disabled>Continue</button></div>
+    `;
+    document.querySelectorAll('#optList .opt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const opts = document.querySelectorAll('#optList .opt');
+        opts.forEach(o => o.disabled = true);
+        const chosen = btn.dataset.v === 'true';
+        const isCorrect = chosen === step.correct;
+        const correctBtn = [...opts].find(o => (o.dataset.v==='true') === step.correct);
+        correctBtn.classList.add('correct');
+        if(!isCorrect) btn.classList.add('incorrect');
+        registerAnswer(isCorrect, step.explain);
+      });
+    });
+  }
+
+  function registerAnswer(isCorrect, explain){
+    const prog = state.progress[current.id];
+    prog.total += 1;
+    if(isCorrect){ prog.correct += 1; state.xp += 10; }
+    renderTopStats();
+    const fb = document.getElementById('fbBox');
+    fb.className = 'feedback-box show ' + (isCorrect ? 'right' : 'wrong');
+    fb.innerHTML = `<span class="fb-head">${isCorrect ? '✓ Correct' : '✕ Not quite'}</span>${explain}`;
+    const cont = document.getElementById('qContinue');
+    cont.disabled = false;
+    cont.addEventListener('click', () => { qIdx += 1; renderQuestion(); window.scrollTo({top:0}); });
+  }
+}
+
+renderPicker();
+renderRoster();
+</script>
+</body>
+</html>
